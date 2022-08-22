@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# DotEnv configuration
+.env
+
+# Jupyter NB Checkpoints
+.ipynb_checkpoints/
+
+# exclude data and ref symlinks
+data/
+ref/
+
+# cluster file
+[0-9]+.out
+slurm-*.out
