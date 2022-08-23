@@ -8,9 +8,9 @@ def compute_local_gradients(E, M, S, O):
 
     for i in range(n_samples):
         for r in range(n_signatures):
-            print(type(M[i]))
-            print(type(S[r]))
-            print(M.dtype, S.dtype)
+            # print(type(M[i]))
+            # print(type(S[r]))
+            # print(M.dtype, S.dtype)
             numerator = M[i]*S[r]
             denumerator_sum = np.array([E[i] @ S[:, k] for k in range(n_mutations)])
             denumerator_sum_c = denumerator_sum + 0.000001
@@ -36,7 +36,7 @@ def compute_hessians(E, M, S):
     #             denominatior = np.array([(E[i] @ S[:, k])**2
     #                                      for k in range(n_mutations)])
     #             hessian[r, s] = np.sum(-(numerator/denominatior))
-    #             # print(hessian.shape)
+    #             # # print(hessian.shape)
     #     hessians.append(hessian)
     # 
     # return hessians
@@ -46,7 +46,7 @@ def compute_global_gradient(E, local_gradients, lambd):
     cond_a = local_gradients-lambd*np.sign(E)
     cond_b = local_gradients-lambd*np.sign(local_gradients)
     cond_c = 0
-#    print(np.where(E!=0, cond_a, np.where(np.abs(local_gradients)>lambd, cond_b, cond_c)))
+#    # print(np.where(E!=0, cond_a, np.where(np.abs(local_gradients)>lambd, cond_b, cond_c)))
     return np.where(E != 0, cond_a, np.where(np.abs(local_gradients) > lambd, cond_b, cond_c))
 
 
@@ -126,10 +126,10 @@ def newton_raphson1(E, global_gradients, hessians):
             assert False
         if det < 10e-10:
             return None
-        # print("#########", np.linalg.inv(active_hessian))
+        # # print("#########", np.linalg.inv(active_hessian))
         new_row[active_mask] = E_row[active_mask] - np.linalg.inv(active_hessian) @ active_gradients
         nr.append(new_row)
-    print("H", np.mean(active_hessians))
+    # print("H", np.mean(active_hessians))
     v1 = np.array(nr)
     return v1
 
@@ -172,10 +172,10 @@ def Frobinous(M, S, E, O):
     from numpy import linalg as LA
     fibo = []
     fibo1 = []
- #   print("The shape of E is:",E.shape)
- #   print("The shape oSf S is:",S.shape)
+ #   # print("The shape of E is:",E.shape)
+ #   # print("The shape oSf S is:",S.shape)
     fibo1 =  (E @ S)*O
-    # print(fibo1)
+    # # print(fibo1)
     fibo = LA.norm(M - fibo1, ord = 2)
     return fibo
 
@@ -188,12 +188,12 @@ def running_simulation_new(E, M, S, O, topt, tedge, lambd):
     old_loss = np.inf
     pmf_s = []
     for step in range(50):
-        #print("Step is:", step)
+        ## print("Step is:", step)
         E_hat = E
         if(np.any(E < 0)):
-        #    print("############", np.min(E))
+        #    # print("############", np.min(E))
             E = np.maximum(E, 0)
-        #    print("############", np.min(E))
+        #    # print("############", np.min(E))
         local_gradients = compute_local_gradients(E, M, S, O)
         hessians = compute_hessians(E, M, S)
         global_gradients = compute_global_gradient(E, local_gradients, lambd)
@@ -208,7 +208,7 @@ def running_simulation_new(E, M, S, O, topt, tedge, lambd):
             E = update_exposure_gradient(E, global_gradients, minimun_topt_tedge)
             # l = loss_func(E)
             # old_loss = l
-            #print("Normal", loss_func(E), np.mean(global_gradients**2), topt, tedge)
+            ## print("Normal", loss_func(E), np.mean(global_gradients**2), topt, tedge)
         else:
             if(np.any(E < 0)):
                 E = np.maximum(E, 0)
@@ -223,37 +223,37 @@ def running_simulation_new(E, M, S, O, topt, tedge, lambd):
                 E = update_exposure_NR(E, global_gradients, topt, tedge, newton_raphason)
      #       conv = convergence(E, E_hat)
      #        l = loss_func(E)
-     #        print("LOSSS", l)
-     #        print("OLD_LOSS", old_loss)
+     #        # print("LOSSS", l)
+     #        # print("OLD_LOSS", old_loss)
      #        loss = -poisson.logpmf(M,(E@S)*O)
      #        conv = convergence(old_loss, l)
      #        if (conv==True):
      #           break
-     #           print("The pmf converge")
+     #           # print("The pmf converge")
                #exit()
-            #     print(E.mean())
-            #     print(global_gradients.mean())
-            #     print(minimun_topt_tedge, minimun_topt_tedge)
+            #     # print(E.mean())
+            #     # print(global_gradients.mean())
+            #     # print(minimun_topt_tedge, minimun_topt_tedge)
             # old_loss = l
-            # print("Newton", loss_func(E), np.mean(global_gradients**2), topt, tedge)
+            # # print("Newton", loss_func(E), np.mean(global_gradients**2), topt, tedge)
 
         # topt = compute_topt(E, local_gradients, global_gradients, hessians)
         # tedge =compute_t_edge(E, global_gradients)
         # local_gradients = compute_local_gradients(E, M, S, O)
         # hessians = compute_hessians(E, M, S, O)
         # global_gradients= compute_global_gradient(E, local_gradients, lambd= 0)
-    ###print(n_normal, n_newton)
+    #### print(n_normal, n_newton)
     if(np.any(E < 0)):
         E = np.maximum(E, 0)
-    #     print("OLD LOSS_MAIN",old_loss )
+    #     # print("OLD LOSS_MAIN",old_loss )
     #     loss = -poisson.logpmf(M,(E@S)*O)
     #     pmf_s.append(np.mean(loss))
     #     conv = convergence(old_loss, np.mean(loss))
     #     old_loss = np.mean(loss)
-    #     print("LOSS_MAIN", np.mean(loss))
+    #     # print("LOSS_MAIN", np.mean(loss))
     #     if (conv==True):
-    #         print("The pmf converge_MAIN")
-    #         print("PMF FINAL",np.mean(pmf_s))
+    #         # print("The pmf converge_MAIN")
+    #         # print("PMF FINAL",np.mean(pmf_s))
     #         break
     return E
 
@@ -266,10 +266,10 @@ def running_simulation_new(E, M, S, O, topt, tedge, lambd):
 #    from numpy import linalg as LA
 #    fibo = []
 #    fibo1 = []
- #   print("The shape of E is:",E.shape)
- #   print("The shape oSf S is:",S.shape)
+ #   # print("The shape of E is:",E.shape)
+ #   # print("The shape oSf S is:",S.shape)
  #   fibo1 =  (E @ S)*O
-    # print(fibo1)
+    # # print(fibo1)
  #   fibo = LA.norm(M - fibo1, ord = 2)
  #   return fibo
 def mse(E, E_hat):

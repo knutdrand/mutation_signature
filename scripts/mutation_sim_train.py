@@ -23,20 +23,20 @@ def main(M, n_signatures, lambd):
     mse_old = np.inf
     pmf_old = np.inf
     for _ in range(300):
-        print("Step is script:", _ )
+        # # print("Step is script:", _ )
         E = main2_fixed_denovo.running_simulation_new(E, M, S, O, topt, tedge, lambd)# lambd)
         S = main2_fixed_denovo.running_simulation_new(S.T, M.T, E.T, O.T, topt, tedge, 0).T
         mse_e = main2_fixed_denovo.Frobinous(M,S,E,O)
         d_mse_s.append(mse_e)
         loss = -poisson.logpmf(M,(E@S)*O)
         pmf_s.append(np.mean(loss))
-        print("MSE of S", mse_e)
+        # print("MSE of S", mse_e)
         conv = main2_fixed_denovo.convergence(mse_e, mse_old)
         conv = main2_fixed_denovo.convergence(np.mean(loss), pmf_old)
-        print("LOSS PMF E", np.mean(loss))
-        print("LOSS S", np.mean(loss))
+        # print("LOSS PMF E", np.mean(loss))
+        # print("LOSS S", np.mean(loss))
     #    if (conv==True):
-    #        print("The pmf converge")
+    #        # print("The pmf converge")
     #        break
         mse_old = mse_e
         pmf_old = np.mean(loss)
