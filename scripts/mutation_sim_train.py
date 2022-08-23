@@ -5,16 +5,15 @@ import main2_fixed_denovo
 np.random.seed(100)
 
 
-def main(M, n_signatures):
+def main(M, n_signatures, lambd):
     M = M.to_numpy()
-    print(M)
     n_samples, n_mutations = M.shape
     O = np.ones((n_samples, n_mutations), dtype=int)
     E = np.full((n_samples, n_signatures), 0.00001)
     S = np.random.rand(n_signatures*n_mutations).reshape(n_signatures, n_mutations)
     topt = np.float64("Inf")
     tedge = np.float64("Inf")
-    lambd = 0
+    # lambd = 0
     if( np.any(E< 0)):
         E = np.maximum(E,0)
     pmf_e = []

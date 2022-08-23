@@ -6,7 +6,7 @@ import numpy as np
 
 
 wildcard_constraints:
-    dataset="prostate",
+    dataset="prostate|breast_cancer",
     fold="\d+"
 
 outDir = "data"   # symlink to /work
@@ -18,7 +18,7 @@ SCRATCH  = "/work/scratch/sasha"
 localrules: all
 	
 INPUT_ALL = [f"results/{dataset}/total/{k}/{Lambda}/logpmf.txt" for k in range(2, 15)
-             for Lambda in [0, 0.0025, 0.05, 0.12, 0.2] for dataset in ["prostate"]]
+             for Lambda in [0, 0.0025, 0.05, 0.12, 0.2] for dataset in ["prostate", "breast_cancer"]]
 
 
 rule all:
@@ -29,7 +29,7 @@ rule simulate:
     output:
         "results/{dataset}/m.csv"
     run:
-        np.savetxt(output[0], np.arange(120).reshape(30, 4), delimiter="\t")
+        np.savetxt(output[0], np.random.poisson(2, 30*96).reshape(30, 96), delimiter="\t")
 
 rule cv:
     input:

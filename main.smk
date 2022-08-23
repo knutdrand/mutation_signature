@@ -1,4 +1,4 @@
-rule all:
+rule do_all:
     input:
         ["results/{dataset}/total/{k}/{lambda}/logpmf.txt" for k in range(2, 15)
          for lambda in [0, 0.0025, 0.05, 0.12, 0.2] for dataset in "prostate"]
