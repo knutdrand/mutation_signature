@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from mutation_sim_train import main
+snakemake = snakemake
 
 k = int(snakemake.wildcards.k)
 Lambda = float(snakemake.wildcards.Lambda)

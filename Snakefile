@@ -66,8 +66,9 @@ rule ten_fold:
     output:
         "results/{dataset}/total/{k}/{Lambda}/logpmf.txt"
     run:
-        open(output[0], "w").write(
-            sum(float(open(f).read()) for f in input)/10)
+        with open(output[0], "w") as f:
+            f.write(
+                sum(float(open(f).read()) for f in input)/10)
 
 
 # rule A:
