@@ -22,7 +22,7 @@ def main(M, n_signatures, lambd):
     d_mse_s = []
     mse_old = np.inf
     pmf_old = np.inf
-    for _ in range(300):
+    for _ in range(5):
         # # print("Step is script:", _ )
         E = main2_fixed_denovo.running_simulation_new(E, M, S, O, topt, tedge, lambd)# lambd)
         S = main2_fixed_denovo.running_simulation_new(S.T, M.T, E.T, O.T, topt, tedge, 0).T
@@ -40,8 +40,6 @@ def main(M, n_signatures, lambd):
     #        break
         mse_old = mse_e
         pmf_old = np.mean(loss)
-    open("/mnt/lustre/groups/CBBI0818_2/BOPE/cancer/signature/opp/denovo/exome/k2/k2_f1/k2_1_0/train_pcawg_prot_adeno_k2_0_146_96_pmf_s2.txt", "w").write("\n".join(str(l) for l in pmf_s))
-    open("/mnt/lustre/groups/CBBI0818_2/BOPE/cancer/signature/opp/denovo/exome/k2/k2_f1/k2_1_0/train_pcawg_prot_adeno_k2_0_146_96_mse2.txt", "w").write("\n".join(str(l) for l in d_mse_s))
     
     
     if(np.any(E < 0)):

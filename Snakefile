@@ -16,14 +16,25 @@ SCRATCH  = "/work/scratch/sasha"
 # SAMPLES, = glob_wildcards(outDir + "/reads/{sample}-R1_001.fastq.gz")
 
 localrules: all
-	
-INPUT_ALL = [f"results/{dataset}/total/{k}/{Lambda}/logpmf.txt" for k in range(2, 15)
-             for Lambda in [0, 0.0025, 0.05, 0.12, 0.2] for dataset in ["prostate", "breast_cancer"]]
-
+ks = list(range(2, 4))
+lambdas = [0, 0.0025]
 
 rule all:
     input:
-        INPUT_ALL
+        [f"results/{dataset}/all.csv" for dataset in ["prostate"]]
+
+rule total_file:
+    input:
+        [f"results/{{dataset}}/total/{k}/{Lambda}/logpmf.txt" for k in ks for Lambda in lambdas]
+    output:
+        "results/{dataset}/all.csv"
+    run:
+        with open(output[0], "w") as outfile:
+            outfile.write("#k\tLambda\tlogpmf\n")
+            for f, (k, Lambda) in zip(input, [(k, Lambda) for k in ks for Lambda in lambdas]):
+                logpmf = open(f).read()
+                outfile.write(f"{k}\t{Lambda}\t{logpmf}\n")
+    
 
 rule simulate:
     output:
@@ -68,8 +79,9 @@ rule ten_fold:
     run:
         with open(output[0], "w") as f:
             f.write(
-                sum(float(open(f).read()) for f in input)/10)
+                str(sum(float(open(i).read()) for i in input)/10))
 
+            
 
 # rule A:
 # 	input:

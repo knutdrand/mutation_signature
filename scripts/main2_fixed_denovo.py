@@ -187,7 +187,7 @@ def running_simulation_new(E, M, S, O, topt, tedge, lambd):
     # loss = -poisson.logpmf(M,(E@S)*O)
     old_loss = np.inf
     pmf_s = []
-    for step in range(50):
+    for step in range(2):
         ## print("Step is:", step)
         E_hat = E
         if(np.any(E < 0)):
